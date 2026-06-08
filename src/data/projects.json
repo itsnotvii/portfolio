@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "title": "Efficient Data Management System",
+    "description": "A bakery management system built with Java, using binary search trees and hash maps for fast inventory lookups and order processing.",
+    "bullets": [
+      "Binary search trees and hash maps for quick lookups and inventory management",
+      "Unique ISBN-style product IDs for every bakery item",
+      "Four access levels: Guest, Customer, Employee, Manager",
+      "Streamlined front-end to back-end data flow"
+    ],
+    "tech": ["Java", "Eclipse IDE", "VS Code", "GitHub"],
+    "github": "https://github.com/itsnotvii"
+  },
+  {
+    "id": 2,
+    "title": "This Website",
+    "description": "Personal portfolio rebuilt from scratch with a modern stack.",
+    "bullets": [
+      "Built with Vite + React + TypeScript",
+      "Styled entirely with Tailwind CSS",
+      "Deployed on Vercel with automatic CI/CD on every push"
+    ],
+    "tech": ["React", "TypeScript", "Tailwind CSS", "Framer Motion", "Vite", "Vercel"],
+    "github": "https://github.com/itsnotvii"
+  }
+]

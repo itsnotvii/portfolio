@@ -36,6 +36,20 @@ export default function Hero() {
     }, [])
 
     return (
-        
+        <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-bg">
+            {/* Tile grid */}
+            <div ref={gridRef} className="absolute inset-0 z-10 pointer-events-none"
+                style={{ display: 'grid', gridTemplateColumns: `repeat(${COLS}, 1fr)`, gridTemplateRows: `repeat(${ROWS}, 1fr)`, gap: '1px'}}>
+                {Array.from({ length: COLS * ROWS }).map((_, i) => (
+                    <div key={i} className="tile" style={{
+                        background: 'rgba(255,255,255,0.055)',
+                        transition: 'opacity 0.6s cubic-bezier(0.2,0.9,0.3,1.1), transform 0.6s cubic-bezier(0.2,0.9,0.3,1.1)',
+                        opacity: 1,
+                    }} />
+                ))}
+                </div>
+
+                
+        </section>
     )
 }

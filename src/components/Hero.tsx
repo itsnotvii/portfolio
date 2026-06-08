@@ -47,9 +47,16 @@ export default function Hero() {
                         opacity: 1,
                     }} />
                 ))}
-                </div>
+            </div>
 
-                
+            {/* Subtle grid bg */}
+            <div className="absolute inset-0 opacity-[0.03]" style ={{
+                backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
+                backgroundSize: '80px 80x',
+            }} />
+            
+
+
         </section>
     )
 }

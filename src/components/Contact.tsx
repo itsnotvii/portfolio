@@ -11,7 +11,7 @@ export default function Contact() {
     setStatus('sending')
     setTimeout(() => setStatus('sent'), 1000)
   }
- 
+
   return (
     <section id="contact" className="py-32 px-6 max-w-5xl mx-auto">
       <p className="font-mono text-xs text-muted tracking-[0.25em] uppercase mb-3">Say Hi</p>

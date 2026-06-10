@@ -12,5 +12,55 @@ export default function Contact() {
         setTimeout(() => setStatus('sent'), 1000)
     }
 
-    
+    return (  
+        <section id="contact" className="py-32 px-6 max-w-5xl mx-auto">
+            <p className="font-mono text-xs text-muted tracking-[0.25em] uppercase mb-3">Say Hi</p>
+            <h2 className="font-display font-bold text-4xl md:text-5xl text-text mb-4">Contact</h2>
+            <p className="font-body text-dim mb-16 max-w-md">
+                Let's build together. Message me or find me on my socials!
+            </p>   
+
+            <div ref={ref} className="grid md:grid-cols-2 gap-16">
+                <motion.div initial={{ opacity: 0, y: 20 }}
+                    animate={inView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.5 }}>
+                    {status === 'sent' ? (
+                        <div className="flex flex-col gap-3 py-10">
+                            <span className="font-mono text-accent text-sm">Message sent</span>
+                            <p className="font-body text-dim text-sm">I'll get back to you as soon as I can.</p>
+                            <button onClick={() => setStatus('idle')}
+                                className="font-mono text-xs text-muted hover:text-dim transition-colors mt-2 text-left">
+                                    Send another →
+                            </button>
+                        </div>
+                    ) : (
+                      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                        <div>
+                          <label className="font-mono text-[11px] text-muted tracking-widest uppercase block mb-2">Name</label>
+                          <input type="text" required placeholder="Your name"
+                            className="w-full bg-surface border border-border text-text placeholder-muted font-body text-sm px-4 py-3 focus:border-muted focus:outline-none transition-colors duration-200" />
+                        </div>
+                        <div>
+                          <label className="font-mono text-[11px] text-muted tracking-widest uppercase block mb-2">Email</label>
+                          <input type="email" required placeholder="your@email.com" 
+                            className="w-full bg-surface border border-border text-text placeholder-muted font-body text-sm px-4 py-3 focus:border-muted focus:outline-none transition-colors duration-200" />
+                        </div>
+                        <div>
+                          <label className="font-mono text-[11px] text-muted tracking-widest uppercase block mb-2">Message</label>
+                          <textarea rows={5} required placeholder="Your thoughts go here..."
+                            className="w-full bg-surface border border-border text-text placeholder-muted font-body text-sm px-4 py-3 focus:border-muted focus:outline-none transition-colors duration-200 resize-none" />
+                        </div>
+                        <button type="submit" disabled={status === 'sending'}
+                          className="font-mono text-sm px-6 py-3 bg-accent text-bg font-medium hover:bg-text transition-colors duration-200 disabled:opacity-50 mt-2 text-left">
+                          {status === 'sending' ? 'Sending...' : 'Send Message →'}
+                        </button>
+                      </form>
+                    )}
+                </motion.div>
+
+                
+            </div>
+        </section>
+    )
+
 }

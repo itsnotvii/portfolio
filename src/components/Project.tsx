@@ -21,3 +21,15 @@ export default function Projects() {
     )
 }
 
+function ProjectRow({ project, index }: { project: Project; index: numer }) {
+    const ref = useRef<HTMLDivElement>(null)
+    const inView = useInView(ref, { once: true, margin: '-80px' })
+
+    return (
+        <motion.div ref={ref}
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+        )
+}
+

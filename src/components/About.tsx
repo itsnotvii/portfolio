@@ -36,7 +36,24 @@ export default function About() {
                         I'm a passionate problem-solver - whether through code, design, or creative thinking. I'm drived to build things that are both functional and thoughtfully made.
                     </p>
 
-                    <div className="flex flex-wrap gap-2 pt-2"></div>
+                    <div className="flex flex-wrap gap-2 pt-2">
+                        {['San Jose State', 'Software Engineering', 'Kobe, Japan', 'Problem Solver'].map((tag) => (
+                            <span key={tag} className="font-mono text-[11px] text-dim px-3 py-1.5 border border-border">
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+
+                    <div className="flex gap-6 pt-2">
+                        <a href="https://github.com/itsnotvii" target="_blank" rel="noreferrer"
+                            className="font-mono text-xs text-muted hover:text-accent transition-colors duration-200">
+                            GitHub ↗
+                        </a>
+                        <a href="https://www.linkedin.com/in/thomas-johnson-821603327/" target="_blank" rel="noreferrer"
+                            className="font-mono text-xs text-muted hover:text-accent transition-colors duration-200">
+                            LinkedIn ↗
+                        </a>
+                    </div>
                 </motion.div>
             </div>
         </section>

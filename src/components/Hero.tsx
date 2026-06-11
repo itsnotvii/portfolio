@@ -72,6 +72,23 @@ export default function Hero() {
         }}>
           S
         </div>
+
+        {/* JOHNS - bottom left */}
+        <div style={{
+          position: 'absolute',
+          bottom: '2vw',
+          left: '-1vw',
+          fontSize: '22vw',
+          fontFamily: 'Syne, sans-serif',
+          fontWeight: 800,
+          color: 'transparent',
+          WebkitTextStroke: '1px rgba(255,255,255,0.06)',
+          lineHeight: 1,
+          whiteSpace: 'nowrap',
+          letterSpacing: '-0.03em',
+        }}>
+          JOHNS
+        </div>
       </div>
 
 

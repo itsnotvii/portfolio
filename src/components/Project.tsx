@@ -42,7 +42,7 @@ function ProjectRow({ project, index }: { project: Project; index: number }) {
               {project.github && (
                 <a href={project.github} target="_blank" rel="noreferrer"
                   className="font-mono text-xs text-muted hover:text-accent transition-colors duration-200">
-                  GitHub ↗
+                  View on GitHub ↗
                 </a>
               )}
               {project.live && (

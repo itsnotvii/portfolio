@@ -1,137 +1,213 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 
-const COLS = 16
-const ROWS = 10
+const CHARS = 'THOMASJOHNSON'
+
+function useScramble(target: string, trigger: boolean) {
+  const [display, setDisplay] = useState(target.replace(/[A-Z0-9]/g, '?'))
+  useEffect(() => {
+    if (!trigger) return
+    let frame = 0
+    const totalFrames = 25
+    const interval = setInterval(() => {
+      setDisplay(
+        target.split('').map((char, i) => {
+          if (char === ' ') return ' '
+          if (frame >= totalFrames - (target.length - i)) return char
+          return CHARS[Math.floor(Math.random() * CHARS.length)]
+        }).join('')
+      )
+      frame++
+      if (frame > totalFrames + target.length) clearInterval(interval)
+    }, 55)
+    return () => clearInterval(interval)
+  }, [trigger, target])
+  return display
+}
+
+interface LetterPos {
+  ox: number; oy: number
+  x: number; y: number
+  vx: number; vy: number
+  angle: number
+  angleSpeed: number
+  swimRadius: number
+  char: string
+  fontSize: number
+  opacity: number
+}
 
 export default function Hero() {
-  const gridRef = useRef<HTMLDivElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const lettersRef = useRef<LetterPos[]>([])
+  const mouseRef = useRef({ x: -9999, y: -9999 })
+  const animRef = useRef<number>(0)
   const [revealed, setRevealed] = useState(false)
 
+  const line1 = useScramble('THOMAS', revealed)
+  const line2 = useScramble('JOHNSON', revealed)
+
+  // Grain
+  const grainRef = useRef<HTMLCanvasElement>(null)
   useEffect(() => {
-    const tiles = gridRef.current?.querySelectorAll<HTMLDivElement>('.tile')
-    if (!tiles) return
-
-    let count = 0
-    const total = tiles.length
-
-    const reveal = () => {
-      const idx = Math.floor(Math.random() * total)
-      const tile = tiles[idx]
-      if (tile && tile.style.opacity !== '0') {
-        tile.style.opacity = '0'
-        tile.style.transform = 'scale(1.2)'
-        count++
-        if (count >= total * 0.6 && !revealed) setRevealed(true)
+    const canvas = grainRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    let animId: number
+    const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight }
+    resize()
+    window.addEventListener('resize', resize)
+    const drawGrain = () => {
+      const { width, height } = canvas
+      const imageData = ctx.createImageData(width, height)
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        const val = Math.random() * 255
+        imageData.data[i] = val; imageData.data[i+1] = val; imageData.data[i+2] = val; imageData.data[i+3] = 18
       }
+      ctx.putImageData(imageData, 0, 0)
+      animId = requestAnimationFrame(drawGrain)
+    }
+    drawGrain()
+    return () => { cancelAnimationFrame(animId); window.removeEventListener('resize', resize) }
+  }, [])
+
+  // Swimming + fleeing letters
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const resize = () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+      initLetters()
     }
 
-    const interval = setInterval(reveal, 18)
-    const timeout = setTimeout(() => {
-      clearInterval(interval)
-      tiles.forEach((t) => { t.style.opacity = '0' })
-    }, 1800)
+    const initLetters = () => {
+      const w = canvas.width
+      const h = canvas.height
+      const allChars = 'THOMASJOHNSON'.repeat(2).split('')
 
-    return () => { clearInterval(interval); clearTimeout(timeout) }
+      lettersRef.current = allChars.map((char) => {
+        const x = Math.random() * w
+        const y = Math.random() * h
+        return {
+          char,
+          ox: x,
+          oy: y,
+          x,
+          y,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: (Math.random() - 0.5) * 1.5,
+          angle: Math.random() * Math.PI * 2,
+          angleSpeed: (Math.random() - 0.5) * 0.008,
+          swimRadius: 40 + Math.random() * 80,
+          fontSize: Math.min(w * 0.22, 200) * (0.2 + Math.random() * 0.9),
+          opacity: 0.02 + Math.random() * 0.08,
+        }
+      })
+    }
+
+    resize()
+    window.addEventListener('resize', resize)
+
+    const onMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect()
+      mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top }
+    }
+    window.addEventListener('mousemove', onMouseMove)
+
+    const REPEL_RADIUS = 140
+    const REPEL_STRENGTH = 5000
+    const DAMPING = 0.88
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      const fontSize = Math.min(canvas.width * 0.22, 200)
+      ctx.font = `800 ${fontSize}px Syne`
+      ctx.textBaseline = 'alphabetic'
+
+      lettersRef.current.forEach((l) => {
+        l.angle += l.angleSpeed
+
+        // Drift freely
+        l.vx += Math.cos(l.angle) * 0.04
+        l.vy += Math.sin(l.angle * 0.7) * 0.04
+
+        // Repel from cursor
+        const dx = l.x - mouseRef.current.x
+        const dy = l.y - mouseRef.current.y
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        if (dist < REPEL_RADIUS && dist > 0) {
+          const force = (REPEL_RADIUS - dist) / REPEL_RADIUS
+          l.vx += (dx / dist) * force * force * REPEL_STRENGTH * 0.01
+          l.vy += (dy / dist) * force * force * REPEL_STRENGTH * 0.01
+        }
+
+        // Speed cap
+        const speed = Math.sqrt(l.vx * l.vx + l.vy * l.vy)
+        if (speed > 2.5) { l.vx = (l.vx / speed) * 2.5; l.vy = (l.vy / speed) * 2.5 }
+
+        l.vx *= DAMPING
+        l.vy *= DAMPING
+
+        l.x += l.vx
+        l.y += l.vy
+
+        // Wrap around edges
+        if (l.x > canvas.width + fontSize) l.x = -fontSize
+        if (l.x < -fontSize) l.x = canvas.width + fontSize
+        if (l.y > canvas.height + fontSize) l.y = -fontSize
+        if (l.y < -fontSize) l.y = canvas.height + fontSize
+
+        ctx.font = `800 ${l.fontSize}px Syne`
+        ctx.fillStyle = `rgba(255,255,255,${l.opacity})`
+        ctx.fillText(l.char, l.x, l.y)
+      })
+
+      animRef.current = requestAnimationFrame(draw)
+    }
+
+    draw()
+    setTimeout(() => setRevealed(true), 300)
+
+    return () => {
+      cancelAnimationFrame(animRef.current)
+      window.removeEventListener('resize', resize)
+      window.removeEventListener('mousemove', onMouseMove)
+    }
   }, [])
 
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-bg">
+      <canvas ref={canvasRef} className="absolute inset-0 z-10 pointer-events-none" />
+      <canvas ref={grainRef} className="absolute inset-0 z-20 pointer-events-none" />
 
-      {/* Deconstructed background typography */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
-        {/* THOMA - top left, cropped on right */}
-        <div style={{
-          position: 'absolute',
-          top: '-2vw',
-          left: '-1vw',
-          fontSize: '28vw',
-          fontFamily: 'Syne, sans-serif',
-          fontWeight: 800,
-          color: 'transparent',
-          WebkitTextStroke: '1px rgba(255,255,255,0.06)',
-          lineHeight: 1,
-          whiteSpace: 'nowrap',
-          letterSpacing: '-0.03em',
-        }}>
-          THOMA
-        </div>
-
-        {/* S - rotated, right side */}
-        <div style={{
-          position: 'absolute',
-          top: '8vw',
-          right: '-4vw',
-          fontSize: 'Syne, sans-serif',
-          fontWeight: 800,
-          color: 'transparent',
-          WebkitTextStroke: '1px rgba(255,255,255,0.05)',
-          lineHeight: 1,
-          transform: 'rotate(90deg)',
-          letterSpacing: '-0.03em',
-        }}>
-          S
-        </div>
-
-        {/* JOHNS - bottom left */}
-        <div style={{
-          position: 'absolute',
-          bottom: '2vw',
-          left: '-1vw',
-          fontSize: '22vw',
-          fontFamily: 'Syne, sans-serif',
-          fontWeight: 800,
-          color: 'transparent',
-          WebkitTextStroke: '1px rgba(255,255,255,0.06)',
-          lineHeight: 1,
-          whiteSpace: 'nowrap',
-          letterSpacing: '-0.03em',
-        }}>
-          JOHNS
-        </div>
-      </div>
-
-
-      {/* Tile grid */}
-      <div ref={gridRef} className="absolute inset-0 z-10 pointer-events-none"
-        style={{ display: 'grid', gridTemplateColumns: `repeat(${COLS}, 1fr)`, gridTemplateRows: `repeat(${ROWS}, 1fr)`, gap: '1px' }}>
-        {Array.from({ length: COLS * ROWS }).map((_, i) => (
-          <div key={i} className="tile" style={{
-            background: 'rgba(255,255,255,0.055)',
-            transition: 'opacity 0.6s cubic-bezier(0.2,0.9,0.3,1.1), transform 0.6s cubic-bezier(0.2,0.9,0.3,1.1)',
-            opacity: 1,
-          }} />
-        ))}
-      </div>
-
-      {/* Subtle grid bg */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{
-        backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
-        backgroundSize: '80px 80px',
-      }} />
-
-      {/* Content */}
-      <div className="relative z-20 text-center px-6 max-w-3xl">
+      <div className="relative z-30 text-center px-6 max-w-4xl">
         <motion.p initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: revealed ? 1 : 0, y: revealed ? 0 : 10 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="font-mono text-xs text-dim tracking-[0.3em] uppercase mb-6">
+          className="font-mono text-xs text-dim tracking-[0.3em] uppercase mb-8">
           Software Engineer
         </motion.p>
 
-        <motion.h1 initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: revealed ? 1 : 0, y: revealed ? 0 : 20 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="font-display font-extrabold text-6xl md:text-8xl tracking-tight text-text leading-none mb-6">
-          Thomas<br />
-          <span className="text-accent">Johnson</span>
+        <motion.h1
+          initial={{ opacity: 0 }}
+          animate={{ opacity: revealed ? 1 : 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+          className="font-display font-extrabold leading-none mb-8 tracking-tight"
+          style={{ fontSize: 'clamp(3.5rem, 10vw, 8rem)' }}>
+          <span className="block text-text font-mono">{line1}</span>
+          <span className="block text-accent font-mono">{line2}</span>
         </motion.h1>
 
         <motion.p initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: revealed ? 1 : 0, y: revealed ? 0 : 10 }}
           transition={{ duration: 0.6, delay: 0.35 }}
           className="font-body text-dim text-lg mb-10 max-w-md mx-auto leading-relaxed">
-          Building clean, thoughtful software. Currently studying Software Engineering at SJSU.
+          Software Engineering student at SJSU. Welcome to my internet section.
         </motion.p>
 
         <motion.div initial={{ opacity: 0, y: 10 }}
@@ -140,7 +216,7 @@ export default function Hero() {
           className="flex items-center justify-center gap-4">
           <a href="#projects"
             className="font-mono text-sm px-6 py-3 bg-accent text-bg font-medium hover:bg-text transition-colors duration-200">
-            View Work
+            View Projects
           </a>
           <a href="#contact"
             className="font-mono text-sm px-6 py-3 border border-border text-dim hover:border-accent hover:text-accent transition-all duration-200">
@@ -149,13 +225,7 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Scroll hint */}
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: revealed ? 0.4 : 0 }}
-        transition={{ delay: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-        <span className="font-mono text-[10px] text-dim tracking-widest uppercase">Scroll</span>
-        <div className="w-px h-8 bg-gradient-to-b from-dim to-transparent" />
-      </motion.div>
+     
     </section>
   )
 }

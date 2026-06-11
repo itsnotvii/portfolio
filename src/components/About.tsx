@@ -7,7 +7,6 @@ export default function About() {
 
   return (
     <section id="about" className="py-32 px-6 max-w-5xl mx-auto">
-      <p className="font-mono text-xs text-muted tracking-[0.25em] uppercase mb-3">Background</p>
       <h2 className="font-display font-bold text-4xl md:text-5xl text-text mb-16">About Me</h2>
 
       <div ref={ref} className="grid md:grid-cols-5 gap-12 items-start">
@@ -15,9 +14,9 @@ export default function About() {
           animate={inView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 0.6 }}
           className="md:col-span-2">
-          <div className="aspect-[3/4] bg-surface border border-border overflow-hidden relative">
-            <img src="/images/IMG_8842.png" alt="Thomas Johnson"
-              className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+          <div className="aspect-[7/8] bg-surface border border-border overflow-hidden relative">
+            <img src="/images/Profile.png" alt="Thomas Johnson"
+              className="w-full h-full object-cover hover:grayscale-0 transition-all duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-bg/40 to-transparent pointer-events-none" />
           </div>
         </motion.div>

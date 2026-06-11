@@ -37,6 +37,30 @@ export default function Hero() {
 
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-bg">
+
+      {/* Deconstructed background typography */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
+        {/* THOMA - top left, cropped on right */}
+        <div style={{
+          position: 'absolute',
+          top: '-2vw',
+          left: '-1vw',
+          fontSize: '28vw',
+          fontFamily: 'Syne, sans-serif',
+          fontWeight: 800,
+          color: 'transparent',
+          WebkitTextStroke: '1px rgba(255,255,255,0.06)',
+          lineHeight: 1,
+          whiteSpace: 'nowrap',
+          letterSpacing: '-0.03em',
+        }}>
+          THOMA
+        </div>
+
+        {/* S - rotated, right side */}
+      </div>
+
+
       {/* Tile grid */}
       <div ref={gridRef} className="absolute inset-0 z-10 pointer-events-none"
         style={{ display: 'grid', gridTemplateColumns: `repeat(${COLS}, 1fr)`, gridTemplateRows: `repeat(${ROWS}, 1fr)`, gap: '1px' }}>

@@ -58,6 +58,20 @@ export default function Hero() {
         </div>
 
         {/* S - rotated, right side */}
+        <div style={{
+          position: 'absolute',
+          top: '8vw',
+          right: '-4vw',
+          fontSize: 'Syne, sans-serif',
+          fontWeight: 800,
+          color: 'transparent',
+          WebkitTextStroke: '1px rgba(255,255,255,0.05)',
+          lineHeight: 1,
+          transform: 'rotate(90deg)',
+          letterSpacing: '-0.03em',
+        }}>
+          S
+        </div>
       </div>
 
 

@@ -2,11 +2,11 @@ import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 
 const timeline = [
-  { year: '2003', title: 'Born in Kobe, Japan', desc: 'Grew up surrounded by technology and developed an early passion for computers and electronics.' },
+  { year: '2005', title: 'Born in Kobe, Japan', desc: 'Grew up surrounded by technology and developed an early passion for computers and electronics.' },
   { year: '2015', title: 'Moved to the United States', desc: 'Relocated to pursue education and new opportunities.' },
   { year: '2023', title: 'De Anza College', desc: 'Started studying Computer Science at De Anza Community College.' },
-  { year: '2024', title: 'San Jose State University', desc: 'Transferred to SJSU, majoring in Software Engineering.' },
-  { year: '2025', title: 'Open to Internships', desc: 'Actively building projects and looking for opportunities in software engineering.' },
+  { year: '2025', title: 'San Jose State University', desc: 'Transferred to SJSU, majoring in Software Engineering.' },
+  { year: '2026', title: 'Open to Internships', desc: 'Actively building projects and looking for opportunities in software engineering.' },
 ]
 
 export default function About() {

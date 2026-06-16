@@ -12,7 +12,7 @@ const timeline = [
 export default function About() {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-100px' })
-
+        
   return (
     <section id="about" className="py-32 px-6 max-w-5xl mx-auto">
       <h2 className="font-display font-bold text-4xl md:text-5xl text-text mb-16">About Me</h2>

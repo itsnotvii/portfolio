@@ -4,12 +4,29 @@ import { motion, useInView } from 'framer-motion'
 export default function Contact() {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-100px' })
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle')
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setStatus('sending')
-    setTimeout(() => setStatus('sent'), 1000)
+    const form = e.currentTarget
+    const data = new FormData(form)
+
+    try {
+      const res = await fetch('https://formspree.io/f/mjgdzzvd', {
+        method: 'POST',
+        body: data,
+        headers: { Accept: 'application/json' },
+      })
+      if (res.ok) {
+        setStatus('sent')
+        form.reset()
+      } else {
+        setStatus('error')
+      }
+    } catch {
+      setStatus('error')
+    }
   }
 
   return (
@@ -37,19 +54,24 @@ export default function Contact() {
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div>
                 <label className="font-mono text-[11px] text-muted tracking-widest uppercase block mb-2">Name</label>
-                <input type="text" required placeholder="Your name"
+                <input type="text" name="name" required placeholder="Your name"
                   className="w-full bg-surface border border-border text-text placeholder-muted font-body text-sm px-4 py-3 focus:border-muted focus:outline-none transition-colors duration-200" />
               </div>
               <div>
                 <label className="font-mono text-[11px] text-muted tracking-widest uppercase block mb-2">Email</label>
-                <input type="email" required placeholder="your@email.com"
+                <input type="email" name="email" required placeholder="your@email.com"
                   className="w-full bg-surface border border-border text-text placeholder-muted font-body text-sm px-4 py-3 focus:border-muted focus:outline-none transition-colors duration-200" />
               </div>
               <div>
                 <label className="font-mono text-[11px] text-muted tracking-widest uppercase block mb-2">Message</label>
-                <textarea rows={5} required placeholder="What's on your mind?"
+                <textarea rows={5} name="message" required placeholder="What's on your mind?"
                   className="w-full bg-surface border border-border text-text placeholder-muted font-body text-sm px-4 py-3 focus:border-muted focus:outline-none transition-colors duration-200 resize-none" />
               </div>
+
+              {status === 'error' && (
+                <p className="font-mono text-xs text-red-400">Something went wrong. Try again.</p>
+              )}
+
               <button type="submit" disabled={status === 'sending'}
                 className="font-mono text-sm px-6 py-3 bg-accent text-bg font-medium hover:bg-text transition-colors duration-200 disabled:opacity-50 mt-2 text-left">
                 {status === 'sending' ? 'Sending...' : 'Send Message →'}

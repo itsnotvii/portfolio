@@ -152,12 +152,12 @@ export default function Hero() {
         animate={{ opacity: revealed ? 1 : 0 }}
         transition={{ duration: 0.6, delay: 0.1 }}
         className="flex items-center justify-between px-6 md:px-12 pt-28 pb-4 border-b border-border">
-        <span className="font-mono text-xs text-muted tracking-[0.25em] uppercase">Portfolio 2025</span>
-        <span className="font-mono text-xs text-muted tracking-[0.25em] uppercase">San Jose, CA</span>
+        <span className="font-mono text-xs text-muted tracking-[0.25em] uppercase">Portfolio v2</span>
+        <span className="font-mono text-xs text-muted tracking-[0.25em] uppercase"> ready in 484 ms</span>
       </motion.div>
 
       {/* Main split */}
-      <div className="flex-1 grid md:grid-cols-2 overflow-hidden">
+      /<div className="flex-1 grid md:grid-cols-2 overflow-hidden">
 
         {/* Left — name */}
         <motion.div
@@ -184,7 +184,7 @@ export default function Hero() {
           </div>
 
           <p className="font-body text-dim text-sm mt-8 max-w-xs leading-relaxed">
-            CS student at SJSU. I build things that work.
+            SWE student at SJSU. I enjoy building and designing.
           </p>
 
           <div className="flex items-center gap-4 mt-8">

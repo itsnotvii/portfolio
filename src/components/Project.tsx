@@ -1,129 +1,41 @@
-import { useRef, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
 import type { Project } from '../types'
 import projectsData from '../data/projects.json'
 
-const projects: Project[] = projectsData
+const projects: Project[] = projectsData as Project[]
 
 export default function Projects() {
-  const [current, setCurrent] = useState(0)
-  const [direction, setDirection] = useState(0)
-
-  const prev = () => {
-    setDirection(-1)
-    setCurrent((c) => (c - 1 + projects.length) % projects.length)
-  }
-
-  const next = () => {
-    setDirection(1)
-    setCurrent((c) => (c + 1) % projects.length)
-  }
-
-  const getPeek = (offset: -1 | 1) => {
-    return projects[(current + offset + projects.length) % projects.length]
-  }
-
   return (
-    <section id="projects" className="py-32 px-6 max-w-6xl mx-auto">
+    <section id="projects" className="py-32 px-6 md:px-12 max-w-7xl mx-auto">
       <p className="font-mono text-xs text-muted tracking-[0.25em] uppercase mb-3">Work</p>
-      <h2 className="font-display font-bold text-4xl md:text-5xl text-text mb-16 mt-3">Projects</h2>
+      <h2 className="font-display font-bold text-4xl md:text-5xl text-text mb-16">Projects</h2>
 
-      <div className="relative flex items-center gap-4">
-
-        {/* Left peek */}
-        <div className="hidden lg:block w-48 shrink-0 opacity-30 scale-95 origin-right pointer-events-none select-none">
-          <PeekCard project={getPeek(-1)} />
-        </div>
-
-        {/* Arrow left */}
-        <button onClick={prev}
-          className="hidden lg:flex shrink-0 w-10 h-10 items-center justify-center border border-border text-dim hover:border-accent hover:text-accent transition-all duration-200 z-10">
-          ←
-        </button>
-
-        {/* Main card */}
-        <div className="flex-1 overflow-hidden relative" style={{ minHeight: '480px' }}>
-          <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
-              key={current}
-              custom={direction}
-              initial={{ opacity: 0, x: direction * 80 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: direction * -80 }}
-              transition={{ duration: 0.35, ease: 'easeInOut' }}
-              className="w-full"
-            >
-              <MainCard project={projects[current]} />
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Arrow right */}
-        <button onClick={next}
-          className="hidden lg:flex shrink-0 w-10 h-10 items-center justify-center border border-border text-dim hover:border-accent hover:text-accent transition-all duration-200 z-10">
-          →
-        </button>
-
-        {/* Right peek */}
-        <div className="hidden lg:block w-48 shrink-0 opacity-30 scale-95 origin-left pointer-events-none select-none">
-          <PeekCard project={getPeek(1)} />
-        </div>
-      </div>
-
-      {/* Mobile arrows */}
-      <div className="flex lg:hidden items-center justify-center gap-4 mt-6">
-        <button onClick={prev}
-          className="w-10 h-10 flex items-center justify-center border border-border text-dim hover:border-accent hover:text-accent transition-all duration-200">
-          ←
-        </button>
-        <button onClick={next}
-          className="w-10 h-10 flex items-center justify-center border border-border text-dim hover:border-accent hover:text-accent transition-all duration-200">
-          →
-        </button>
-      </div>
-
-      {/* Dots + progress */}
-      <div className="flex flex-col items-center gap-3 mt-8">
-        <div className="flex gap-2">
-          {projects.map((_, i) => (
-            <button key={i} onClick={() => { setDirection(i > current ? 1 : -1); setCurrent(i) }}
-              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === current ? 'bg-accent w-4' : 'bg-muted'}`}
-            />
-          ))}
-        </div>
-        <div className="w-48 h-px bg-border relative overflow-hidden">
-          <motion.div
-            className="absolute top-0 left-0 h-full bg-accent"
-            animate={{ width: `${((current + 1) / projects.length) * 100}%` }}
-            transition={{ duration: 0.35 }}
-          />
-        </div>
-        <span className="font-mono text-xs text-muted">
-          {String(current + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}
-        </span>
+      <div className="grid md:grid-cols-2 gap-px border border-border">
+        {projects.map((project, i) => (
+          <ProjectCard key={project.id} project={project} index={i} />
+        ))}
       </div>
     </section>
   )
 }
 
-function MainCard({ project }: { project: Project }) {
-  return (
-    <div className="bg-surface border border-border p-8 md:p-10">
-      {/* Preview image */}
-      <div className="w-full aspect-video bg-border mb-8 overflow-hidden">
-        {project.image ? (
-          <img src={project.image} alt={project.title}
-            className="w-full h-full object-cover" />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <span className="font-mono text-xs text-muted">No preview</span>
-          </div>
-        )}
-      </div>
+function ProjectCard({ project, index }: { project: Project; index: number }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-60px' })
 
-      <div className="flex items-start justify-between gap-4 mb-4">
-        <h3 className="font-display font-semibold text-2xl text-text">{project.title}</h3>
-        <div className="flex gap-4 shrink-0">
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="group relative bg-surface hover:bg-border transition-colors duration-300 p-8 flex flex-col gap-6"
+    >
+      {/* Top row */}
+      <div className="flex items-start justify-between">
+        <span className="font-mono text-xs text-muted">0{index + 1}</span>
+        <div className="flex gap-4">
           {project.github && (
             <a href={project.github} target="_blank" rel="noreferrer"
               className="font-mono text-xs text-muted hover:text-accent transition-colors duration-200">
@@ -139,43 +51,39 @@ function MainCard({ project }: { project: Project }) {
         </div>
       </div>
 
-      <p className="font-body text-dim text-sm leading-relaxed mb-6">{project.description}</p>
+      {/* Title */}
+      <h3 className="font-display font-bold text-2xl text-text group-hover:text-accent transition-colors duration-200 leading-tight">
+        {project.title}
+      </h3>
 
-      <ul className="flex flex-col gap-2 mb-6">
+      {/* Description */}
+      <p className="font-body text-dim text-sm leading-relaxed flex-1">
+        {project.description}
+      </p>
+
+      {/* Bullets */}
+      <ul className="flex flex-col gap-2">
         {project.bullets.map((b, i) => (
-          <li key={i} className="flex items-start gap-3 text-sm text-dim">
-            <span className="text-muted mt-1 shrink-0">—</span>
+          <li key={i} className="flex items-start gap-3 text-xs text-dim">
+            <span className="text-muted shrink-0 mt-0.5">—</span>
             <span className="font-body leading-relaxed">{b}</span>
           </li>
         ))}
       </ul>
 
-      <div className="flex flex-wrap gap-3">
+      {/* Tech */}
+      <div className="flex flex-wrap gap-2 pt-2 border-t border-border">
         {project.tech.map((t) => (
           <div key={t.name}
-            className="flex items-center gap-2 font-mono text-[11px] text-dim px-3 py-1.5 border border-border hover:border-muted transition-colors duration-200">
-            <img src={t.icon} alt={t.name} className="w-4 h-4 object-contain" />
+            className="flex items-center gap-1.5 font-mono text-[11px] text-dim px-2.5 py-1 border border-border hover:border-muted transition-colors duration-200">
+            <img src={t.icon} alt={t.name} className="w-3.5 h-3.5 object-contain" />
             {t.name}
           </div>
         ))}
       </div>
-    </div>
-  )
-}
 
-function PeekCard({ project }: { project: Project }) {
-  return (
-    <div className="bg-surface border border-border p-4">
-      <div className="w-full aspect-video bg-border mb-3 overflow-hidden">
-        {project.image ? (
-          <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <span className="font-mono text-[10px] text-muted">No preview</span>
-          </div>
-        )}
-      </div>
-      <p className="font-display font-semibold text-sm text-text truncate">{project.title}</p>
-    </div>
+      {/* Accent line on hover */}
+      <div className="absolute bottom-0 left-0 w-0 h-px bg-accent group-hover:w-full transition-all duration-500" />
+    </motion.div>
   )
 }

@@ -4,74 +4,66 @@
     "title": "Expense Tracker",
     "description": "A full stack finance dashboard built with React, Node.js, and PostgreSQL. Track expenses, income, and assets with real-time charts and stats.",
     "bullets": [
-      "Full-stack personal finance dashboard for tracking expenses, income, and assets with complete CRUD functionality",
-      "Real-time analytics dashboard with net worth, savings rate, time-based filtering, recurring entries, and detailed stat breakdowns",
-      "Data visualizations including 7-day income vs spending line chart, category breakdowns, and recent activity feed with status tagging"
+      "Full-stack personal finance dashboard with complete CRUD functionality",
+      "Real-time analytics — net worth, savings rate, time-based filtering, recurring entries",
+      "Data visualizations including 7-day income vs spending chart and category breakdowns"
     ],
     "tech": [
       { "name": "React", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
-      { "name": "Node.Js", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
+      { "name": "Node.js", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
       { "name": "JavaScript", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
       { "name": "PostgreSQL", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" },
-      { "name": "Vercel", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vercel/vercel-original.svg" },
-      { "name": "Railway", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/railway/railway-original.svg" },
       { "name": "Supabase", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg" }
     ],
-    "github": "https://github.com/itsnotvii/expense-tracker",
-    "image": "/images/Expense_Tracker.png"
+    "github": "https://github.com/itsnotvii/expense-tracker"
   },
   {
     "id": 2,
-    "title": "This Website",
-    "description": "Personal portfolio rebuilt from scratch with a modern stack.",
+    "title": "Digit Classifier",
+    "description": "Trained a CNN from scratch on 60k images achieving 99.2% accuracy. Exported to ONNX and deployed in the browser — draw a digit, get a real-time prediction.",
     "bullets": [
-      "Built with Vite + React + TypeScript",
-      "Styled entirely with Tailwind CSS",
-      "Deployed on Vercel with automatic CI/CD on every push"
+      "CNN trained in PyTorch on MNIST dataset — 99.2% test accuracy on 60,000+ images",
+      "Interactive React app where users draw digits and get real-time confidence scores",
+      "Exported to ONNX for in-browser inference — no server needed"
+    ],
+    "tech": [
+      { "name": "React", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+      { "name": "Python", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
+      { "name": "PyTorch", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg" },
+      { "name": "Vercel", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vercel/vercel-original.svg" }
+    ],
+    "github": "https://github.com/itsnotvii/digit-classifier"
+  },
+  {
+    "id": 3,
+    "title": "Mercari Clone",
+    "description": "Mercari-inspired marketplace app built with Next.js 14, TypeScript, and Tailwind CSS. Browse listings, view item details, and list items for sale.",
+    "bullets": [
+      "Product browsing, item detail pages, and responsive UI components",
+      "Item listing functionality — create and manage products for sale",
+      "Work in progress"
+    ],
+    "tech": [
+      { "name": "React", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+      { "name": "TypeScript", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
+      { "name": "Next.js", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" }
+    ],
+    "github": "https://github.com/itsnotvii/mercari-clone"
+  },
+  {
+    "id": 4,
+    "title": "This Website",
+    "description": "Personal portfolio designed and built from scratch. Interactive hero with scramble text, split layout terminal, and animated sections throughout.",
+    "bullets": [
+      "Scramble text reveal and split hero with live typing terminal component",
+      "Zero CSS files — styled entirely with Tailwind utility classes",
+      "Auto-deploys to Vercel on every push to main"
     ],
     "tech": [
       { "name": "React", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
       { "name": "TypeScript", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
       { "name": "Vite", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg" }
     ],
-    "github": "https://github.com/itsnotvii/portfolio",
-    "image": "/images/Portfolio.png"
-  },
-  {
-    "id": 3,
-    "title": "Digital Classifier",
-    "description": "Digit Classifier — PyTorch, ONNX, React, Vercel Trained a CNN from scratch on 60k images (99.2% accuracy). Exported to ONNX and deployed in the browser — users draw a digit and get a real-time prediction with confidence scores.",
-    "bullets": [
-      "Developed and trained a Convolutional Neural Network (CNN) in PyTorch on the MNIST dataset, achieving 99.2% test accuracy on 60,000+ training images",
-      "Built an interactive React application where users can draw handwritten digits and receive real-time predictions with confidence scores",
-      "Deployed the full application on Vercel, enabling fast, accessible AI-powered digit recognition directly in the browser"
-    ],
-    "tech": [
-      { "name": "React", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
-      { "name": "JavaScript", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
-      { "name": "Python", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
-      { "name": "PyTorch", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg" },
-      { "name": "Onnx", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/onnx/onnx-original.svg" },
-      { "name": "Vercel", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vercel/vercel-original.svg" }
-    ],
-    "github": "https://github.com/itsnotvii/digit-classifier",
-    "image": "/images/Digital_Classifier.png"
-  },
-  {
-    "id": 4,
-    "title": "Mercari Clone",
-    "description": "Mercari-inspired marketplace app built with Next.js 14, TypeScript, and Tailwind CSS. Browse listings, view item details, and list items for sale.",
-    "bullets": [
-      "Implemented product browsing, item detail pages, and responsive UI components for a seamless user experience",
-      "Built item listing functionality allowing users to create and manage products for sale",
-      "Currently a work in progress"
-    ],
-    "tech": [
-      { "name": "React", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
-      { "name": "TypeScript", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
-      { "name": "Next.Js", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" }
-    ],
-    "github": "https://github.com/itsnotvii/mercari-clone",
-    "image": "/images/x.png"
+    "github": "https://github.com/itsnotvii/portfolio"
   }
 ]
